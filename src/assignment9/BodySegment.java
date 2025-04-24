@@ -20,7 +20,6 @@ public class BodySegment {
 		this.y=y;
 		this.size=size;
 		this.color = Color.green;
-		
 	}
 	
 	/**

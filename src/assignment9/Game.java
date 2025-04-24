@@ -21,15 +21,15 @@ public class Game {
 	}
 	
 	public void play() {
-		while (snake.isInbounds()) {
+		while (snake.isInbounds() && !snake.hasSelfCollision()) { //boolean, once false, game over
 			int dir = getKeypress();
 			if (dir != -1) {
 				snake.changeDirection(dir);
 			}
-			snake.move();
+			snake.move(); //move by updating body position
 			for (int i = 0; i < foods.size(); i++) {
-				if (snake.eatFood(foods.get(i))) {
-					foods.get(i).randomizePosition();
+				if (snake.eatFood(foods.get(i))) { //food eat or not
+					foods.get(i).randomizePosition(); //assign random position 
 				}
 			}
 

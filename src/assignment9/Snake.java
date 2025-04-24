@@ -39,14 +39,15 @@ public class Snake {
 	 * based on the current direction of travel
 	 */
 	public void move() {
-		for (int i = segments.size() - 1; i > 0; i--) {
-			BodySegment current = segments.get(i);
-			BodySegment previous = segments.get(i-1);
-			current.setX(previous.getX());
+		for (int i = segments.size() - 1; i > 0; i--) { //last -> first but no head
+			BodySegment current = segments.get(i); //assign segment
+			BodySegment previous = segments.get(i-1);//assign segment before it
+			current.setX(previous.getX()); 
 			current.setY(previous.getY());
+			//move current 1 front
 		}
 		
-		BodySegment head = segments.get(0);
+		BodySegment head = segments.get(0); // move head according to key
 		head.setX(head.getX() + deltaX);
 		head.setY(head.getY() + deltaY);
 	}
@@ -66,22 +67,36 @@ public class Snake {
 	 * @return true if the snake successfully ate the food
 	 */
 	public boolean eatFood(Food f) {
-		BodySegment head = segments.get(0);
-		double distance = Math.sqrt(Math.pow(head.getX() - f.getX(), 2) + Math.pow(head.getY() - f.getY(), 2));
+		BodySegment head = segments.get(0);//get head
+		double distance = Math.sqrt(Math.pow(head.getX() - f.getX(), 2) + Math.pow(head.getY() - f.getY(), 2));//calculate distance
 		if (distance < SEGMENT_SIZE) {
-			BodySegment tail = segments.get(segments.size()-1);
-			segments.add(new BodySegment(tail.getX(), tail.getY(), SEGMENT_SIZE));
-			return true;
+			BodySegment tail = segments.get(segments.size()-1); //get tail
+			segments.add(new BodySegment(tail.getX(), tail.getY(), SEGMENT_SIZE)); //add to tail
+			return true; //eaten
 		}
-		return false;
+		return false; // not eaten
 	}
 	
 	/**
 	 * Returns true if the head of the snake is in bounds
 	 * @return whether or not the head is in the bounds of the window
 	 */
-	public boolean isInbounds() {
+	public boolean isInbounds() { //check in canvas or not
 		BodySegment head = segments.getFirst();
 		return head.getX() >= 0 && head.getX() <= 1 && head.getY() >= 0 && head.getY() <= 1; 
+	}
+	
+	public boolean hasSelfCollision() { //game over when head touch tail
+	    BodySegment head = segments.get(0);
+	    for (int i = 1; i < segments.size() - 1; i++) {
+	        BodySegment segment = segments.get(i);
+	        double dx = head.getX() - segment.getX();
+	        double dy = head.getY() - segment.getY();
+	        double distance = Math.sqrt(dx * dx + dy * dy);
+	        if (distance < SEGMENT_SIZE / 2) {
+	            return true;
+	        }
+	    }
+	    return false;
 	}
 }
